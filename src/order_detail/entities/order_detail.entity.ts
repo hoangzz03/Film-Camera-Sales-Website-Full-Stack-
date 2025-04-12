@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
-import { Order } from 'src/order/entities/order.entity';
 import { Product } from 'src/products/entities/product.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 @Entity({ name: 'order_detail' })
 export class OrderDetail {
     @PrimaryGeneratedColumn()
@@ -9,12 +10,9 @@ export class OrderDetail {
     @Column()
     quantity: number;
 
-    @Column()
-    price: string;
-    
-    @ManyToOne(() => Order, order => order.orderDetails)
-    order: Order;
-    
     @ManyToOne(() => Product, product => product.orderDetails)
     product: Product;
+
+    @ManyToOne(() => User, user => user.orderDetails)
+    user: User;
 }

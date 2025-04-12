@@ -1,29 +1,31 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Order } from 'src/order/entities/order.entity';
-
-export enum PaymentStatus {
-    PENDING = "pending",
-    PROCESSING = "processing",
-    SHIPPED = "shipped",
-    DELIVERED = "delivered",
-    CANCELLED = "cancelled",
-  }
+import { OrderDetail } from 'src/order_detail/entities/order_detail.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity({ name: 'payments' })
 export class Payment {
     @PrimaryGeneratedColumn()
     id: number;
-    
-    @Column()
-    payment_date: string;
 
     @Column()
-    payment_method: string;   
+    orderId: string;
 
     @Column()
-    payment_status: string;
+    amount: number;
 
-    @ManyToOne(() => Order, order => order.payments)
-    order: Order;
+    @Column()
+    message: string;
+
+    @Column()
+    payUrl: string;
+
+    @Column()
+    resultCode: number;
+
+    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+    createat: Date;
+
+    @ManyToOne(() => User, user => user.payments)
+    user: User;
 
 }

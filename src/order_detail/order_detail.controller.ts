@@ -22,6 +22,11 @@ export class OrderDetailController {
     return this.orderDetailService.getOrderDetailById(+id);
   }
 
+  @Get('user/:id')
+  getOrderDetailByUserId(@Param('id') id: string) {
+    return this.orderDetailService.getOrderDetailByUserId(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDetailDto: UpdateOrderDetailDto) {
     return this.orderDetailService.update(+id, updateOrderDetailDto);
@@ -30,5 +35,15 @@ export class OrderDetailController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.orderDetailService.delete(+id);
+  }
+
+  @Post('/add-quantity/:id')
+  addQuantity(@Param('id') id: string,) {
+    return this.orderDetailService.addQuantity(+id);
+  }
+
+  @Post('/remove-quantity/:id')
+  removeQuantity(@Param('id') id: string,) {
+    return this.orderDetailService.removeQuantity(+id);
   }
 }

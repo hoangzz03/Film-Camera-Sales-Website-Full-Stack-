@@ -8,23 +8,26 @@ import { User } from './entities/user.entity';
 import { Role } from 'src/role/entities/role.entity';
 
 @Injectable()
-export class UsersService { 
+export class UsersService {
     constructor(
         @Inject('USER_REPOSITORY')
         private userRepository: Repository<User>,
     ) { }
 
     async findAll() {
-        return await this.userRepository.find();
+        return await this.userRepository.find({ relations: ["role", 'orderDetails', 'payments', 'orderDetails.product'] });
+    }
+    async getAllUser() {
+        return await this.userRepository.find({ });
     }
 
     async getUserById(id: number) {
-        const user = this.userRepository.findOne({ where: { id: id }, relations: ["role"] });
+        const user = this.userRepository.findOne({ where: { id: id }, relations: ["role", 'orderDetails', 'payments', 'orderDetails.product'] });
         if (!user) throw new NotFoundException('User Not Found')
         return user
     }
 
-    async create(createUserDto: CreateUserDto) {
+    async create(createUserDto: CreateUserDto) {    
         const newUser = {
             ...createUserDto,
         }

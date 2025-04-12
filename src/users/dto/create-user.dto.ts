@@ -1,10 +1,10 @@
 import { Role } from './../../role/entities/role.entity';
 import { IsEmail, IsNotEmpty, IsString, IsNumber } from "class-validator";
 
-export class CreateUserDto { 
-    @IsString()
+export class CreateUserDto {
     @IsNotEmpty()
-    name: string; 
+    @IsString()
+    username: string;
 
     @IsNotEmpty()
     @IsEmail()
@@ -17,10 +17,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsString()
     phone: string;
-
-    @IsNotEmpty()
-    @IsString()
-    username: string;
 
     @IsNotEmpty()
     @IsString()

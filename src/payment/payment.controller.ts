@@ -3,7 +3,7 @@ import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 
-@Controller('payment')
+@Controller('payments')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
@@ -18,8 +18,8 @@ export class PaymentController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentService.findOne(+id);
+  getPaymentById(@Param('id') id: string) {
+    return this.paymentService.getPaymentById(+id);
   }
 
   @Patch(':id')
@@ -29,6 +29,6 @@ export class PaymentController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.paymentService.remove(+id);
+    return this.paymentService.delete(+id);
   }
 }

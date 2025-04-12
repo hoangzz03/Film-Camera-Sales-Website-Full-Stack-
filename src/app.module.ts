@@ -5,13 +5,18 @@ import { UsersModule } from './users/users.module';
 import { ProductCategoryModule } from './product_category/product_category.module';
 import { RoleModule } from './role/role.module';
 import { ProductsModule } from './products/products.module';
-import { OrderModule } from './order/order.module';
 import { OrderDetailModule } from './order_detail/order_detail.module';
 import { PaymentModule } from './payment/payment.module';
+import { AuthModule } from './auth/auth.module';
+import { paymentProvider } from './provider/payment.provider';
+import { DatabaseModule } from './database/database.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
-  imports: [UsersModule, ProductCategoryModule, RoleModule, ProductsModule, OrderModule, OrderDetailModule, PaymentModule,],
+  imports: [UsersModule, ProductCategoryModule, RoleModule, ProductsModule, OrderDetailModule, PaymentModule, AuthModule, DatabaseModule, UploadModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    ...paymentProvider,
+    AppService],
 })
-export class AppModule {}
+export class AppModule { }

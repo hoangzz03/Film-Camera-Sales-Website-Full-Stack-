@@ -5,17 +5,17 @@ import { UpdateProductCategoryDto } from './dto/update-product_category.dto';
 
 @Controller('product-category')
 export class ProductCategoryController {
-  constructor(private readonly productCategoryService: ProductCategoryService) {}
+  constructor(private readonly productCategoryService: ProductCategoryService) { }
 
   @Post()
   create(@Body() createProductCategoryDto: CreateProductCategoryDto) {
     return this.productCategoryService.create(createProductCategoryDto);
   }
 
-  
+
   @Get()
   findAll() {
-      return this.productCategoryService.findAll();
+    return this.productCategoryService.findAll();
   }
   @Get(':id')
   getProductCategoryById(@Param('id') id: string) {

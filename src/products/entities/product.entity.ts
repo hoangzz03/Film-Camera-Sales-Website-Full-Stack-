@@ -10,16 +10,16 @@ export class Product {
     name: string;
 
     @Column()
-    image: string; 
+    image: string;
 
     @Column()
     desc: string;
 
     @Column()
-    price: string;
+    price: number;
 
     @Column()
-    quantity: number;
+    detail: string;
 
     @ManyToOne(() => ProductCategory, productCategory => productCategory.products)
     productCategory: ProductCategory;

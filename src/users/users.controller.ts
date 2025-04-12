@@ -12,6 +12,10 @@ export class UsersController {
     findAll() {
         return this.usersService.findAll();
     }
+    @Get( '/plain')
+    getAllUser() {
+        return this.usersService.getAllUser();
+    }
 
     @Get(':id') // GET /users/: id
     getUserById(@Param('id', ParseIntPipe) id: number) {

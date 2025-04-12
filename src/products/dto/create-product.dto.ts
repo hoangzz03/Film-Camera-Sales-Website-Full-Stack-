@@ -5,20 +5,23 @@ export class CreateProductDto {
         @IsNotEmpty()
         @IsString()
         name: string;
-    
+
         @IsNotEmpty()
         @IsString()
         image: string;
-    
+
         @IsNotEmpty()
         @IsString()
         desc: string;
-    
-        @IsNotEmpty()
-        @IsString()
-        price: string;
-    
+
         @IsNotEmpty()
         @IsNumber()
-        quantity: number;
+        price: number;
+
+        @IsNotEmpty()
+        @IsString()
+        detail: string;
+
+        productCategory: ProductCategory;
+
 }

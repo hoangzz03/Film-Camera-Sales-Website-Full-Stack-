@@ -12,11 +12,17 @@ export class OrderDetailService {
     private orderDetailRepository: Repository<OrderDetail>,
   ) { }
   async findAll() {
-    return await this.orderDetailRepository.find();
+    return await this.orderDetailRepository.find({ relations: ['user', 'product'] });
   }
 
   async getOrderDetailById(id: number) {
-    const orderDetail = await this.orderDetailRepository.findOne({ where: { id: id } });
+    const orderDetail = await this.orderDetailRepository.findOne({ where: { id: id }, relations: ['user', 'product'] });
+    if (!orderDetail) throw new NotFoundException('OrderDetail Not Found')
+    return orderDetail
+  }
+
+  async getOrderDetailByUserId(id: number) {
+    const orderDetail = await this.orderDetailRepository.find({ where: { user: { id: id } }, relations: ['user', 'product'] });
     if (!orderDetail) throw new NotFoundException('OrderDetail Not Found')
     return orderDetail
   }
@@ -30,22 +36,44 @@ export class OrderDetailService {
   }
   async update(id: number, updateOrderDetailDto: UpdateOrderDetailDto) {
     const orderDetail = await this.getOrderDetailById(id);
-        if (!orderDetail) {
-            throw new NotFoundException('OrderDetail Not Found')
-        }
-        const updateOrderDetail = {
-            ...updateOrderDetailDto,
-        };
-        await this.orderDetailRepository.update(id, updateOrderDetail);
-        return orderDetail;
+    if (!orderDetail) {
+      throw new NotFoundException('OrderDetail Not Found')
+    }
+    const updateOrderDetail = {
+      ...updateOrderDetailDto,
+    };
+    await this.orderDetailRepository.update(id, updateOrderDetail);
+    return orderDetail;
   }
 
   async delete(id: number) {
     const orderDetail = await this.getOrderDetailById(id);
-        if (!orderDetail) {
-            throw new NotFoundException('OrderDetail Not Found');
-        }
-        await this.orderDetailRepository.delete(id);
-        return orderDetail;
+    if (!orderDetail) {
+      throw new NotFoundException('OrderDetail Not Found');
+    }
+    await this.orderDetailRepository.delete(id);
+    return orderDetail;
   }
+
+  async addQuantity(id: number) {
+    const orderDetail = await this.orderDetailRepository.findOne({ where: { id: id } });
+    if (!orderDetail) {
+      throw new NotFoundException('orderDetail not found');
+    }
+    orderDetail.quantity += 1;
+    await this.orderDetailRepository.save(orderDetail);
+    return orderDetail;
+  }
+
+  async removeQuantity(id: number) {
+    const orderDetail = await this.orderDetailRepository.findOne({ where: { id: id } });
+    if (!orderDetail) {
+      throw new NotFoundException('orderDetail not found');
+    }
+    orderDetail.quantity -= 1;
+    await this.orderDetailRepository.save(orderDetail);
+    return orderDetail;
+  }
+
+
 }

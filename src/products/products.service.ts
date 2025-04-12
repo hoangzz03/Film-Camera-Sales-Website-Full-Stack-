@@ -11,39 +11,65 @@ import { NotFoundException } from '@nestjs/common';
 export class ProductsService {
   constructor(
     @Inject('PRODUCT_REPOSITORY')
-    private productRepository: Repository<Product>
+    private productRepository: Repository<Product>,
+    @Inject('PRODUCT_CATEGORY_REPOSITORY')
+    private productCategoryRepository: Repository<ProductCategory>
   ) { };
+
   async findAll() {
-    return await this.productRepository.find();
+    return await this.productRepository.find({ relations: ['productCategory'] });
   }
   async getProductById(id: number) {
-    const product = this.productRepository.find({ where: { id: id } });
+    const product = this.productRepository.find({ where: { id: id }, relations: ['productCategory'] });
+    if (!product) throw new NotFoundException('product not found')
+    return product
+  }
+
+  async getProductByCateId(id: number) {
+    const product = this.productRepository.find({ where: { productCategory: { id: id } }, relations: ['productCategory'] });
     if (!product) throw new NotFoundException('product not found')
     return product
   }
   async create(createProductDto: CreateProductDto) {
-    const newProduct = {
-      ...createProductDto
+    const { productCategory, ...rest } = createProductDto
+    const category = await this.productCategoryRepository.findOne({ where: { name: String(productCategory) } });
+    if (!category) {
+      throw new NotFoundException('Product category not found');
     }
+
+    const newProduct = this.productRepository.create({
+      ...rest,
+      productCategory: category
+    });
     await this.productRepository.save(newProduct)
     return newProduct;
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
     const product = await this.getProductById(id);
-        if (!product) {
-            throw new NotFoundException('product not found')
-        }
-        await this.productRepository.update(id, updateProductDto);
-        return product;
+    if (!product) {
+      throw new NotFoundException('product not found')
+    }
+    const { name, image, desc, price, detail, productCategory } = updateProductDto
+    const category = await this.productCategoryRepository.findOne({ where: { name: String(productCategory) } });
+    if (!category) {
+      throw new NotFoundException('Product category not found');
+    }
+
+    const newProduct = this.productRepository.create({
+      name, image, desc, price, detail,
+      productCategory: category
+    });
+    await this.productRepository.update(id, newProduct);
+    return product;
   }
 
   async remove(id: number) {
     const product = await this.getProductById(id);
-        if (!product) {
-            throw new NotFoundException('product not found');
-        }
-        await this.productRepository.delete(id);
-        return product;
+    if (!product) {
+      throw new NotFoundException('product not found');
+    }
+    await this.productRepository.delete(id);
+    return product;
   }
 }
